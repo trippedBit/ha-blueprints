@@ -1,0 +1,28 @@
+blueprint:
+  name: Add to shopping list
+  description: Adds a stock item to the shopping list when the counter falls below the threshold value.
+  domain: automation
+  input:
+    counter:
+      name: Stock item counter
+      description: This counter will be used to trigger the automation.
+      selector:
+        entity:
+          filter:
+            domain: [counter, sensor]
+    threshold:
+      name: Stock item threshold value
+      description: The item will be added to the shopping list if the counter falls below this value, e.g. 5.
+    listEntry:
+      name: Stock item shopping list entry
+      description: String to add to the shopping list, e.g. 1x apple juice.
+
+trigger:
+  platform: numeric_state
+  entity_id: !input counter
+  below: !input threshold
+
+action: 
+  service: shopping_list.add_item
+  data:
+    name: !input listEntry
